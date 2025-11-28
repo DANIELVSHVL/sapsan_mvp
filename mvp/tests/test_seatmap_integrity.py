@@ -1,0 +1,1 @@
+"""Seatmap integrity tests."""

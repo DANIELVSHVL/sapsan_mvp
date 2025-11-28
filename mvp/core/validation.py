@@ -1,0 +1,1 @@
+"""Seatmap validation."""

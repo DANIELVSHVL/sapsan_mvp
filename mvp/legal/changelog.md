@@ -1,0 +1,1 @@
+- v001: initial seatmap structure

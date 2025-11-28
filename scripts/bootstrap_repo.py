@@ -1,26 +1,19 @@
 from pathlib import Path
-import shutil
 
 def main():
     root = Path("mvp")
 
     dirs = [
-        root/"data/seatmaps",
-        root/"data/events",
-        root/"data/reference",
-        root/"core",
-        root/"demo/assets/v001",
-        root/"tests",
-        root/"legal",
+        root / "data" / "seatmaps",
+        root / "data" / "events",
+        root / "data" / "reference",
+        root / "core",
+        root / "demo" / "assets" / "v001",
+        root / "tests",
+        root / "legal",
     ]
     for d in dirs:
         d.mkdir(parents=True, exist_ok=True)
-
-    # копируем готовые CSV из /content
-    shutil.copy("/content/sapsan_type1_seats_v1.csv", root/"data/seatmaps/sapsan_type1_seats_v001.csv")
-    shutil.copy("/content/sapsan_type2_seats_v1.csv", root/"data/seatmaps/sapsan_type2_seats_v001.csv")
-    shutil.copy("/content/sapsan_type3_seats_v1.csv", root/"data/seatmaps/sapsan_type3_seats_v001.csv")
-    shutil.copy("/content/sapsan_type4_seats_v1.csv", root/"data/seatmaps/sapsan_type4_seats_v001.csv")
 
     files = {
         root/"data/reference/classes_dict.csv": "service_subclass,service_class,description\n",
@@ -40,9 +33,10 @@ def main():
 
     for p, content in files.items():
         p.parent.mkdir(parents=True, exist_ok=True)
-        p.write_text(content, encoding="utf-8")
+        if not p.exists():          # чтобы не затирать вручную правленное
+            p.write_text(content, encoding="utf-8")
 
-    print("Структура mvp создана.")
+    print("Структура mvp проверена/создана.")
 
 if __name__ == "__main__":
     main()
