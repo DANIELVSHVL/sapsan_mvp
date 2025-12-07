@@ -22,7 +22,6 @@ def _load_seatmaps(seatmaps_dir: Path) -> pd.DataFrame:
             # fallback: попытка вытащить train_type из имени файла, если колонка отсутствует
             # но по ТЗ train_type в колонках есть, так что это просто страховка
             name = path.stem
-            # примитивный хак: ищем 'typeN' в имени
             for t in ("type1", "type2", "type3", "type4"):
                 if t in name:
                     df["train_type"] = t
@@ -203,7 +202,12 @@ def build_seatmaps(
 
             seats: List[Dict[str, Any]] = []
             for _, s in df_layout.iterrows():
+                # Канонический ID места в рамках layout'а.
+                # Для v001 берём простую схему: <layout_id>_SN<seat_no:03d>
+                seat_id_canon = f"{layout_id}_SN{int(s['seat_no']):03d}"
+
                 seat_record = {
+                    "seat_id_canon": seat_id_canon,
                     "seat_no": int(s["seat_no"]),
                     "service_subclass": str(s[service_sub_col]),
                     "service_class": str(s["service_class"]),
@@ -226,8 +230,6 @@ def build_seatmaps(
             coach_layouts[str(layout_id)] = {"seats": seats}
 
         # Собираем итоговую структуру для данного train_type
-        # train_type_id берём как есть из CSV. При необходимости можно заменить на
-        # человекочитаемое имя через маппинг.
         result: Dict[str, Any] = {
             "train_type_id": str(train_type),
             "coaches": coaches,
